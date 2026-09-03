@@ -367,3 +367,329 @@ GROUP BY C.CUSTOMER_ID, C.CUSTOMER_NAME
 ;
 
 
+---Task 13 — Average Order Amount----
+
+/*
+Calculate the average order amount for each customer.
+
+Display:
+
+Customer Name
+Average Order Amount
+Only display customers who have placed at least one order.
+
+Use:
+
+INNER JOIN
+GROUP BY
+AVG()
+
+*/
+
+
+SELECT C.CUSTOMER_NAME, O.QUANTITY,
+AVG(AMOUNT) AS AVG_ORDER_AMOUNT
+FROM Jalpa_Customers AS C
+INNER JOIN Jalpa_Orders AS O
+ON C.customer_id = O.customer_id
+GROUP BY C.customer_name, O.QUANTITY
+;
+
+---Task 14 — Highest Order Amount----
+
+/*
+
+Find the customer who placed the order with the highest amount.
+
+Display:
+
+Customer Name
+Order ID
+Product Name
+Amount
+
+*/
+
+SELECT C.CUSTOMER_NAME, O.ORDER_ID, O.PRODUCT_NAME, 
+MAX(AMOUNT) AS HIGHEST_AMOUNT
+FROM Jalpa_Customers AS C
+INNER JOIN Jalpa_Orders AS O
+ON C.customer_id = O.customer_id
+GROUP BY C.customer_name, O.order_id, O.product_name
+ORDER BY MAX(AMOUNT) DESC
+;
+
+
+SELECT C.CUSTOMER_NAME, O.ORDER_ID, O.PRODUCT_NAME, 
+MAX(AMOUNT) AS HIGHEST_AMOUNT
+FROM Jalpa_Customers AS C
+INNER JOIN Jalpa_Orders AS O
+ON C.customer_id = O.customer_id
+GROUP BY C.customer_name, O.order_id, O.product_name
+;
+
+SELECT TOP 5 C.CUSTOMER_NAME, O.ORDER_ID, O.PRODUCT_NAME, 
+MAX(AMOUNT) AS HIGHEST_AMOUNT
+FROM Jalpa_Customers AS C
+INNER JOIN Jalpa_Orders AS O
+ON C.customer_id = O.customer_id
+GROUP BY C.customer_name, O.order_id, O.product_name
+ORDER BY MAX(AMOUNT) DESC
+;
+
+
+
+---Task 15 — Lowest Order Amount----
+
+/*
+
+Find the customer who placed the order with the lowest amount.
+
+Display:
+
+Customer Name
+Order ID
+Product Name
+Amount
+
+*/
+
+
+SELECT C.CUSTOMER_NAME, O.ORDER_ID, O.PRODUCT_NAME,
+MIN(AMOUNT) AS LOWEST_ORDER_AMOUNT
+FROM Jalpa_Customers AS C
+LEFT JOIN Jalpa_Orders AS O
+ON C.customer_id = O.customer_id
+GROUP BY C.customer_name, O.order_id, O.PRODUCT_NAME
+ORDER BY LOWEST_ORDER_AMOUNT ASC
+;
+
+
+SELECT C.CUSTOMER_NAME, O.ORDER_ID, O.PRODUCT_NAME,
+MIN(AMOUNT) AS LOWEST_ORDER_AMOUNT
+FROM Jalpa_Customers AS C
+LEFT JOIN Jalpa_Orders AS O
+ON C.customer_id = O.customer_id
+WHERE quantity > 1
+GROUP BY C.customer_name, O.order_id, O.PRODUCT_NAME
+ORDER BY LOWEST_ORDER_AMOUNT ASC
+;
+
+---Task 16 — Customer Order Summary----
+
+/*
+
+Create a customer-wise summary containing:
+
+Customer ID
+Customer Name
+Number of Orders
+Total Quantity
+Total Amount
+Include customers who have no orders.
+
+Use:
+
+LEFT JOIN
+GROUP BY
+COUNT()
+SUM()
+
+*/
+
+SELECT C.CUSTOMER_ID, C.customer_name,
+COUNT(ORDER_ID) AS NUMBER_OF_ORDERS,
+SUM(QUANTITY) AS TOTAL_QUANTITY,
+SUM(AMOUNT) AS TOTAL_AMOUNT
+FROM Jalpa_Customers AS C
+LEFT JOIN Jalpa_Orders AS O
+ON C.customer_id = O.customer_id
+GROUP BY C.customer_id, C.customer_name
+;
+
+SELECT C.CUSTOMER_ID, C.customer_name,
+COUNT(ORDER_ID) AS NUMBER_OF_ORDERS,
+SUM(QUANTITY) AS TOTAL_QUANTITY,
+SUM(AMOUNT) AS TOTAL_AMOUNT
+FROM Jalpa_Customers AS C
+LEFT JOIN Jalpa_Orders AS O
+ON C.customer_id = O.customer_id
+WHERE quantity IS NOT NULL
+GROUP BY C.customer_id, C.customer_name
+;
+
+SELECT C.CUSTOMER_ID, C.customer_name,
+COUNT(ORDER_ID) AS NUMBER_OF_ORDERS,
+SUM(QUANTITY) AS TOTAL_QUANTITY,
+SUM(AMOUNT) AS TOTAL_AMOUNT
+FROM Jalpa_Customers AS C
+INNER JOIN Jalpa_Orders AS O
+ON C.customer_id = O.customer_id
+GROUP BY C.customer_id, C.customer_name
+;
+
+
+---Task 17 — Customers With Total Spending Greater Than ₹20,000----
+
+/*
+
+Calculate the total amount spent by each customer.
+
+Display only customers whose total spending is greater than ₹20,000.
+
+Use:
+
+LEFT JOIN
+GROUP BY
+SUM()
+HAVING
+*/
+
+
+SELECT C.CUSTOMER_NAME, O.PRODUCT_NAME,
+SUM(AMOUNT) AS TOTAL_AMOUNT_SPEND
+FROM Jalpa_Customers AS C
+LEFT JOIN Jalpa_Orders AS O
+ON C.customer_id = O.customer_id
+GROUP BY C.customer_name, O.product_name
+HAVING SUM(AMOUNT) > 20000
+;
+
+SELECT C.CUSTOMER_NAME, O.PRODUCT_NAME,
+SUM(AMOUNT) AS TOTAL_AMOUNT_SPEND
+FROM Jalpa_Customers AS C
+LEFT JOIN Jalpa_Orders AS O
+ON C.customer_id = O.customer_id
+GROUP BY C.customer_name, O.product_name
+HAVING SUM(AMOUNT) > 10000
+;
+
+
+---Task 18 — Customers With More Than One Order----
+
+/*
+
+Find customers who have placed more than one order.
+
+Display:
+
+Customer ID
+Customer Name
+Number of Orders
+Use:
+
+JOIN
+GROUP BY
+COUNT()
+HAVING
+*/
+
+SELECT C.CUSTOMER_ID, C.CUSTOMER_NAME,
+COUNT(ORDER_ID) AS NUMBER_OF_ORDERS
+FROM JALPA_CUSTOMERS AS C
+FULL JOIN JALPA_ORDERS AS O
+ON C.CUSTOMER_ID = O.CUSTOMER_ID
+GROUP BY C.CUSTOMER_ID, C.CUSTOMER_NAME
+HAVING COUNT(ORDER_ID) > 1
+;
+
+SELECT C.CUSTOMER_ID, C.CUSTOMER_NAME,
+COUNT(ORDER_ID) AS NUMBER_OF_ORDERS
+FROM JALPA_CUSTOMERS AS C
+FULL JOIN JALPA_ORDERS AS O
+ON C.CUSTOMER_ID = O.CUSTOMER_ID
+GROUP BY C.CUSTOMER_ID, C.CUSTOMER_NAME
+HAVING COUNT(ORDER_ID) >= 1
+;
+
+---Task 19 — Compare Matching and Unmatched Records----
+
+/*
+
+Using FULL OUTER JOIN, identify:
+
+Customers who have orders
+Customers who do not have orders
+Orders whose customers do not exist
+Display the appropriate customer and order information.
+
+
+*/
+--SHOWS BOTH CUSTOMERS AND ORDERS THAT ARE NULL--
+
+SELECT C.CUSTOMER_NAME, O.PRODUCT_NAME, O.QUANTITY, O.AMOUNT
+FROM Jalpa_Customers AS C
+FULL JOIN Jalpa_Orders AS O
+ON C.customer_id = O.customer_id
+;
+
+--SHOWS CUSTOMERS THAT ARE NOT NULL---
+
+SELECT C.CUSTOMER_NAME, O.PRODUCT_NAME, O.QUANTITY, O.AMOUNT
+FROM Jalpa_Customers AS C
+FULL JOIN Jalpa_Orders AS O
+ON C.customer_id = O.customer_id
+WHERE C.customer_id IS NOT NULL 
+;
+
+--SHOWS CUSTOMERS THAT ARE NULL---
+
+SELECT C.CUSTOMER_NAME, O.PRODUCT_NAME, O.QUANTITY, O.AMOUNT
+FROM Jalpa_Customers AS C
+FULL JOIN Jalpa_Orders AS O
+ON C.customer_id = O.customer_id
+WHERE C.customer_id IS NULL
+;
+
+
+--SHOWS CUSTOMERS AND ORDERS ARE NOT NULL---
+
+SELECT C.CUSTOMER_NAME, O.PRODUCT_NAME, O.QUANTITY, O.AMOUNT
+FROM Jalpa_Customers AS C
+FULL JOIN Jalpa_Orders AS O
+ON C.customer_id = O.customer_id
+WHERE C.customer_id IS NOT NULL AND O.order_id IS NOT NULL
+;
+
+--SHOWS CUSTOMERS AND ORDERS ARE NULL---
+
+SELECT C.CUSTOMER_NAME, O.PRODUCT_NAME, O.QUANTITY, O.AMOUNT
+FROM Jalpa_Customers AS C
+FULL JOIN Jalpa_Orders AS O
+ON C.customer_id = O.customer_id
+WHERE C.customer_id IS NULL OR O.order_id IS NULL
+;
+
+
+---Task 20 — Business Order Report----
+
+/*
+
+Create a complete order report using INNER JOIN.
+
+The report should contain:
+
+Customer ID
+Customer Name
+City
+Order ID
+Product Name
+Quantity
+Amount
+Total Value
+Calculate:
+
+Total Value = Quantity × Amount
+
+*/
+
+SELECT C.CUSTOMER_ID, C.CUSTOMER_NAME, C.CITY, O.ORDER_ID, O.PRODUCT_NAME, O.QUANTITY, O.AMOUNT,
+SUM(QUANTITY*AMOUNT) AS TOTAL_VALUE
+FROM Jalpa_Customers AS C
+INNER JOIN Jalpa_Orders AS O
+ON C.customer_id = O.customer_id
+GROUP BY C.CUSTOMER_ID, C.CUSTOMER_NAME, C.CITY, O.ORDER_ID, O.PRODUCT_NAME, O.QUANTITY, O.AMOUNT
+;
+
+
+
