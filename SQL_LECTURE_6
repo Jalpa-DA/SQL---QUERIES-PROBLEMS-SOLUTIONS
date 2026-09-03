@@ -1,0 +1,83 @@
+---LECTURE 6----
+
+USE jalpa_joinpractise;
+
+CREATE TABLE 
+
+SELECT * 
+FROM Jalpa_Customers;
+
+SELECT * 
+FROM Jalpa_Orders;
+
+SELECT * 
+FROM Jalpa_Customers AS C
+LEFT JOIN Jalpa_Orders AS O
+ON C.customer_id = O.customer_id
+WHERE O.customer_id IS NULL
+;
+
+
+SELECT * 
+FROM Jalpa_Customers AS C
+RIGHT JOIN Jalpa_Orders AS O
+ON C.customer_id = O.customer_id
+WHERE C.customer_id IS NULL
+;
+
+SELECT * 
+FROM Jalpa_Customers AS C
+FULL JOIN Jalpa_Orders AS O
+ON C.customer_id = O.customer_id
+WHERE C.customer_id IS NULL OR O.customer_id IS NULL
+;
+
+
+SELECT * 
+FROM Jalpa_Customers AS C
+CROSS JOIN Jalpa_Orders AS O
+;
+
+SELECT
+C.CUSTOMER_ID, C.CUSTOMER_NAME, C.CITY, O.ORDER_ID, O.product_name, O.AMOUNT
+FROM Jalpa_Customers AS C
+FULL OUTER JOIN Jalpa_Orders AS O
+ON C.customer_id = O.customer_id
+;
+
+----JUST 'FULL JOIN' TAKES UP 'FULL OUTER JOIN' BY DEFAULT---
+
+SELECT
+C.CUSTOMER_ID, C.CUSTOMER_NAME, C.CITY, O.ORDER_ID, O.product_name, O.AMOUNT
+FROM Jalpa_Customers AS C
+FULL JOIN Jalpa_Orders AS O
+ON C.customer_id = O.customer_id
+;
+
+----JUST 'JOIN' TAKES UP 'INNER JOIN' BY DEFAULT---
+
+SELECT
+C.CUSTOMER_ID, C.CUSTOMER_NAME, C.CITY, O.ORDER_ID, O.product_name, O.AMOUNT
+FROM Jalpa_Customers AS C
+JOIN Jalpa_Orders AS O
+ON C.customer_id = O.customer_id
+;
+
+SELECT
+C.CUSTOMER_ID, C.CUSTOMER_NAME, C.CITY, O.ORDER_ID, O.product_name, O.AMOUNT
+FROM Jalpa_Customers AS C
+INNER JOIN Jalpa_Orders AS O
+ON C.customer_id = O.customer_id
+;
+
+SELECT
+C.customer_id, C.CUSTOMER_NAME, C.CITY, O.ORDER_ID, O.product_name, O.quantity, O.amount,
+Amount*Quantity AS TOTAL_VALUE
+FROM JALPA_CUSTOMERS AS C
+INNER JOIN JALPA_ORDERS AS O
+ON C.CUSTOMER_ID = O.CUSTOMER_ID
+;
+
+
+
+
