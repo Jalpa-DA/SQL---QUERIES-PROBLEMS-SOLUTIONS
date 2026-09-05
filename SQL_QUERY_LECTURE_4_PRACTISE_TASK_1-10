@@ -18,13 +18,72 @@ Lowest unit price
 
 CREATE DATABASE JAPZZ_INDUSTRIES;
 
-USE JAPZZ_INDUSTRIES;
+use JAPZZ_INDUSTRIES;
 
-C
+CREATE TABLE SALES_TRANSACTIONS
+(
+TRANSACTION_ID INT PRIMARY KEY,
+CUSTOMER_NAME VARCHAR(50),
+PRODUCT_NAME	VARCHAR(50),
+CATEGORY	VARCHAR(50),
+QUANTITY	INT,
+UNIT_PRICE	INT,
+DISCOUNT_PERCENT	INT,
+CITY	VARCHAR(50),
+PAYMENT_MODE VARCHAR(30),
+SALESPERSON	VARCHAR(50),
+CUSTOMER_TYPE	VARCHAR(30)
+);
 
 
+INSERT INTO SALES_TRANSACTIONS
+(TRANSACTION_ID, CUSTOMER_NAME, PRODUCT_NAME, CATEGORY, QUANTITY, UNIT_PRICE, DISCOUNT_PERCENT, CITY, PAYMENT_MODE, SALESPERSON, CUSTOMER_TYPE)
+VALUES
+(1, 'Liam Anderson', 'Laptop', 'Electronics', 2, 55000, 10, 'Toronto', 'Credit Card', 'Emma Wilson', 'Premium'),
+(2, 'Olivia Martin', 'Smartphone', 'Electronics', 3, 25000, 5, 'Vancouver', 'UPI', 'Noah Brown', 'Regular'),
+(3, 'Ethan Thompson', 'Office Chair', 'Furniture', 4, 7500, 8, 'Montreal', 'Cash', 'Sophia Taylor', 'Regular'),
+(4, 'Sophia Garcia', 'Desk', 'Furniture', 2, 12000, 10, 'Calgary', 'Debit Card', 'Lucas Anderson', 'Corporate'),
+(5, 'Noah Williams', 'Headphones', 'Electronics', 5, 3000, 15, 'Ottawa', 'Credit Card', 'Emma Wilson', 'Regular'),
+(6, 'Ava Johnson', 'Printer', 'Electronics', 1, 18000, 5, 'Edmonton', 'UPI', 'Noah Brown', 'Premium'),
+(7, 'William Miller', 'Notebook', 'Stationery', 20, 80, 0, 'Winnipeg', 'Cash', 'Sophia Taylor', 'Regular'),
+(8, 'Isabella Davis', 'Pen Set', 'Stationery', 15, 250, 5, 'Halifax', 'Debit Card', 'Lucas Anderson', 'Regular'),
+(9, 'James Rodriguez', 'Monitor', 'Electronics', 3, 22000, 12, 'Toronto', 'Credit Card', 'Emma Wilson', 'Corporate'),
+(10, 'Mia Martinez', 'Bookshelf', 'Furniture', 2, 9500, 7, 'Vancouver', 'UPI', 'Noah Brown', 'Premium'),
+(11, 'Benjamin Wilson', 'Tablet', 'Electronics', 2, 18000, 10, 'Montreal', 'Credit Card', 'Sophia Taylor', 'Regular'),
+(12, 'Charlotte Moore', 'Keyboard', 'Electronics', 6, 2500, 5, 'Calgary', 'Cash', 'Lucas Anderson', 'Regular'),
+(13, 'Henry Taylor', 'Mouse', 'Electronics', 8, 1200, 10, 'Ottawa', 'UPI', 'Emma Wilson', 'Corporate'),
+(14, 'Amelia Thomas', 'Sofa', 'Furniture', 1, 45000, 15, 'Edmonton', 'Credit Card', 'Noah Brown', 'Premium'),
+(15, 'Alexander White', 'Whiteboard', 'Office Supplies', 3, 6500, 8, 'Winnipeg', 'Debit Card', 'Sophia Taylor', 'Corporate'),
+(16, 'Emily Harris', 'Stapler', 'Stationery', 10, 450, 0, 'Halifax', 'Cash', 'Lucas Anderson', 'Regular'),
+(17, 'Daniel Clark', 'Smartwatch', 'Electronics', 4, 8500, 10, 'Toronto', 'UPI', 'Emma Wilson', 'Premium'),
+(18, 'Ella Lewis', 'Bookshelf', 'Furniture', 1, 11000, 5, 'Vancouver', 'Credit Card', 'Noah Brown', 'Regular'),
+(19, 'Matthew Walker', 'Laptop Bag', 'Accessories', 7, 2200, 12, 'Montreal', 'UPI', 'Sophia Taylor', 'Regular'),
+(20, 'Grace Hall', 'Projector', 'Electronics', 2, 35000, 15, 'Calgary', 'Credit Card', 'Lucas Anderson', 'Corporate'),
+(21, 'Michael Allen', 'Calculator', 'Stationery', 12, 900, 5, 'Ottawa', 'Cash', 'Emma Wilson', 'Regular'),
+(22, 'Chloe Young', 'Air Conditioner', 'Appliances', 1, 42000, 10, 'Edmonton', 'Debit Card', 'Noah Brown', 'Premium'),
+(23, 'Sebastian King', 'Refrigerator', 'Appliances', 1, 55000, 8, 'Winnipeg', 'Credit Card', 'Sophia Taylor', 'Corporate'),
+(24, 'Lily Wright', 'Microwave', 'Appliances', 2, 14000, 12, 'Halifax', 'UPI', 'Lucas Anderson', 'Regular'),
+(25, 'Jack Scott', 'USB Drive', 'Accessories', 10, 900, 5, 'Toronto', 'Cash', 'Emma Wilson', 'Regular'),
+(26, 'Sofia Green', 'Webcam', 'Electronics', 3, 4500, 10, 'Vancouver', 'UPI', 'Noah Brown', 'Premium'),
+(27, 'David Baker', 'Printer Ink', 'Office Supplies', 8, 1800, 7, 'Montreal', 'Debit Card', 'Sophia Taylor', 'Corporate'),
+(28, 'Hannah Adams', 'Desk Lamp', 'Furniture', 5, 1800, 5, 'Calgary', 'Credit Card', 'Lucas Anderson', 'Regular'),
+(29, 'Joseph Nelson', 'Power Bank', 'Accessories', 6, 2500, 10, 'Ottawa', 'UPI', 'Emma Wilson', 'Premium'),
+(30, 'Victoria Carter', 'Coffee Machine', 'Appliances', 2, 12500, 15, 'Edmonton', 'Credit Card', 'Noah Brown', 'Corporate');
 
-Task 2 — Category Performance Analysis
+
+SELECT 
+COUNT(TRANSACTION_ID) AS TOTAL_NUMBER_OF_TRANSACTIONS,
+SUM(QUANTITY) AS TOTAL_QUANTITY_SOLD,
+SUM(QUANTITY*UNIT_PRICE) AS TOTAL_SALES_VALUE, 
+AVG(UNIT_PRICE) AS AVG_UNIT_PRICE,
+MAX(UNIT_PRICE) AS HIGHEST_UNIT_PRICE,
+MIN(UNIT_PRICE) AS LOWEST_UNIT_PRICE
+FROM SALES_TRANSACTIONS
+;
+
+-----Task 2 — Category Performance Analysis---
+
+/*
 Management wants to compare product categories.
 
 For each category, display:
@@ -35,7 +94,20 @@ Total sales value
 Average unit price
 Arrange the categories from highest total sales value to lowest.
 
-Task 3 — Salesperson Performance Report
+*/
+
+SELECT CATEGORY,
+SUM(QUANTITY) AS TOTAL_QUANTITY_SOLD,
+SUM(QUANTITY*UNIT_PRICE) AS TOTAL_SALES_VALUE,
+AVG(UNIT_PRICE) AS AVG_UNIT_PRICE
+FROM SALES_TRANSACTIONS
+GROUP BY CATEGORY
+ORDER BY TOTAL_SALES_VALUE DESC
+;
+
+----Task 3 — Salesperson Performance Report---
+
+/*
 Calculate the performance of each salesperson.
 
 Display:
@@ -47,7 +119,22 @@ Total sales value
 Average unit price
 Arrange the result from highest total sales value to lowest.
 
-Task 4 — City-Wise Sales Analysis
+
+*/
+
+SELECT SALESPERSON,
+COUNT(TRANSACTION_ID) AS NUMBER_OF_TRANSACTIONS_HANDLED,
+SUM(QUANTITY) AS TOTAL_QUANTITY_SOLD,
+SUM(QUANTITY*UNIT_PRICE) AS TOTAL_SALES_VALUE,
+AVG(UNIT_PRICE) AS AVG_UNIT_PRICE
+FROM SALES_TRANSACTIONS
+GROUP BY SALESPERSON
+ORDER BY TOTAL_SALES_VALUE DESC
+;
+
+----Task 4 — City-Wise Sales Analysis---
+
+/*
 Analyze sales performance across cities.
 
 For each city, display:
@@ -58,7 +145,22 @@ Total sales value
 Average unit price
 Display the cities in descending order of total sales value.
 
-Task 5 — Customer Type Analysis
+*/
+
+SELECT CITY,
+COUNT(TRANSACTION_ID) AS NUMBER_OF_TRANSACTIONS_HANDLED,
+SUM(QUANTITY) AS TOTAL_QUANTITY_SOLD,
+SUM(QUANTITY*UNIT_PRICE) AS TOTAL_SALES_VALUE,
+AVG(UNIT_PRICE) AS AVG_UNIT_PRICE
+FROM SALES_TRANSACTIONS
+GROUP BY CITY
+ORDER BY TOTAL_SALES_VALUE DESC
+;
+
+
+-----Task 5 — Customer Type Analysis---
+
+/*
 Analyze purchasing behavior based on customer type.
 
 For each customer type, calculate:
@@ -69,7 +171,21 @@ Total sales value
 Average unit price
 Arrange the result by total sales value from highest to lowest.
 
-Task 6 — Payment Mode Analysis
+*/
+
+SELECT CUSTOMER_TYPE,
+COUNT(TRANSACTION_ID) AS NUMBER_OF_TRANSACTIONS_HANDLED,
+SUM(QUANTITY) AS TOTAL_QUANTITY_SOLD,
+SUM(QUANTITY*UNIT_PRICE) AS TOTAL_SALES_VALUE,
+AVG(UNIT_PRICE) AS AVG_UNIT_PRICE
+FROM SALES_TRANSACTIONS
+GROUP BY CUSTOMER_TYPE
+ORDER BY TOTAL_SALES_VALUE DESC
+;
+
+-----Task 6 — Payment Mode Analysis----
+
+/*
 Management wants to understand which payment methods generate the most business.
 
 For each payment mode, calculate:
@@ -80,7 +196,22 @@ Total sales value
 Average unit price
 Arrange the result by total sales value in descending order.
 
-Task 7 — High-Performing Categories
+*/
+
+SELECT PAYMENT_MODE, 
+COUNT(TRANSACTION_ID) AS NUMBER_OF_TRANSACTIONS_HANDLED,
+SUM(QUANTITY) AS TOTAL_QUANTITY_SOLD,
+SUM(QUANTITY*UNIT_PRICE) AS TOTAL_SALES_VALUE,
+AVG(UNIT_PRICE) AS AVG_UNIT_PRICE
+FROM SALES_TRANSACTIONS
+GROUP BY PAYMENT_MODE
+ORDER BY TOTAL_SALES_VALUE DESC
+;
+
+
+----Task 7 — High-Performing Categories---
+
+/*
 Identify categories that generated more than 300000 in total sales value.
 
 Display:
@@ -91,7 +222,20 @@ Total sales value
 Average unit price
 Only categories meeting the required sales threshold should appear.
 
-Task 8 — High-Performing Salespersons
+*/
+
+SELECT CATEGORY,
+SUM(QUANTITY) AS TOTAL_QUANTITY_SOLD,
+SUM(QUANTITY*UNIT_PRICE) AS TOTAL_SALES_VALUE,
+AVG(UNIT_PRICE) AS AVG_UNIT_PRICE
+FROM SALES_TRANSACTIONS
+GROUP BY CATEGORY
+HAVING SUM(QUANTITY*UNIT_PRICE) > 300000
+;
+
+----Task 8 — High-Performing Salespersons---
+
+/*
 Identify salespersons whose total sales value is greater than 500000.
 
 Display:
@@ -102,7 +246,21 @@ Total quantity sold
 Total sales value
 Arrange the result from highest to lowest total sales value.
 
-Task 9 — High-Volume Products
+*/
+
+SELECT SALESPERSON,
+COUNT(TRANSACTION_ID) AS NUMBER_OF_TRANSACTIONS,
+SUM(QUANTITY) AS TOTAL_QUANTITY_SOLD,
+SUM(QUANTITY*UNIT_PRICE) AS TOTAL_SALES_VALUE
+FROM SALES_TRANSACTIONS
+GROUP BY SALESPERSON
+HAVING SUM(QUANTITY*UNIT_PRICE) > 50000
+ORDER BY TOTAL_SALES_VALUE DESC
+;
+
+-----Task 9 — High-Volume Products---
+
+/*
 Identify products where the total quantity sold is greater than 5.
 
 Display:
@@ -113,8 +271,26 @@ Total sales value
 Average unit price
 Arrange the result by total quantity sold from highest to lowest.
 
-Task 10 — Premium Customer Analysis
+*/
+
+
+SELECT PRODUCT_NAME, 
+SUM(QUANTITY) AS TOTAL_QUANTITY_SOLD,
+SUM(QUANTITY*UNIT_PRICE) AS TOTAL_SALES_VALUE,
+AVG(UNIT_PRICE) AS AVG_UNIT_PRICE
+FROM SALES_TRANSACTIONS
+GROUP BY PRODUCT_NAME
+HAVING SUM(QUANTITY) > 5
+;
+
+
+
+-----Task 10 — Premium Customer Analysis---
+
+/*
 Analyze only transactions made by Premium customers.
+
+
 
 For each category, calculate:
 
@@ -124,159 +300,16 @@ Total sales value
 Average unit price
 Display only categories where the total sales value is greater than 200000.
 
-Task 11 — VIP Customer Analysis
-Analyze transactions made by VIP customers.
+*/
 
-For each salesperson, calculate:
 
-Number of transactions
-Total quantity sold
-Total sales value
-Display only salespersons who generated more than 300000 in VIP sales.
 
-Task 12 — City and Payment Analysis
-Consider transactions where the payment mode is either Online or Card.
-
-For each city, calculate:
-
-Number of transactions
-Total quantity sold
-Total sales value
-Display only cities where total sales value is greater than 300000.
-
-Task 13 — Discount Performance Analysis
-Analyze the effect of discounts.
-
-For each discount percentage, calculate:
-
-Number of transactions
-Total quantity sold
-Total sales value
-Average unit price
-Display only discount percentages that occur in at least 2 transactions.
-
-Task 14 — Electronics Business Analysis
-Consider only Electronics transactions.
-
-For each salesperson, calculate:
-
-Number of transactions
-Total quantity sold
-Total sales value
-Average unit price
-Highest unit price
-Display only salespersons whose Electronics sales value exceeds 250000.
-
-Task 15 — Furniture Business Analysis
-Consider only Furniture transactions where the quantity is greater than 2.
-
-For each city, calculate:
-
-Number of transactions
-Total quantity sold
-Total sales value
-Average unit price
-Display only cities where the resulting total sales value is greater than 50000.
-
-Task 16 — Appliance Sales Analysis
-Consider only Appliances transactions where:
-
-Payment mode is not Cash
-Discount percentage is less than 20
-Group the transactions by salesperson and display:
-
-Number of transactions
-Total quantity sold
-Total sales value
-Average unit price
-Display only salespersons with total sales value above 100000.
-
-Task 17 — Premium vs VIP Performance
-Analyze only Premium and VIP customers.
-
-For each customer type, calculate:
-
-Number of transactions
-Total quantity sold
-Total sales value
-Average unit price
-Maximum unit price
-Arrange the result by total sales value from highest to lowest.
-
-Task 18 — Salesperson Discount Analysis
-Management wants to identify salespersons handling high-discount transactions.
-
-Consider only transactions where the discount percentage is greater than 15.
-
-For each salesperson, calculate:
-
-Number of transactions
-Total quantity sold
-Total sales value
-Average discount percentage
-Display only salespersons who have at least 2 such transactions.
-
-Task 19 — Insert and Verify New Transaction
-A new customer transaction has been received with the following information:
-
-Field	Value
-Transaction ID	1031
-Customer Name	Raj Mehta
-Product Name	MacBook Pro
-Category	Electronics
-Quantity	2
-Unit Price	125000
-Discount	10
-City	Mumbai
-Payment Mode	Online
-Salesperson	Rahul
-Customer Type	Premium
-Insert this transaction into the table.
-
-After inserting the record, generate a query to verify that the transaction has been successfully added.
-
-Task 20 — Final Business Intelligence Challenge
-Management wants a consolidated performance report.
-
-Consider transactions where:
-
-Customer type is either Premium or VIP
-Payment mode is not Cash
-Quantity is greater than 1
-Discount percentage is less than 20
-Group the qualifying transactions by salesperson and category.
-
-The report must contain:
-
-Salesperson
-Category
-Number of transactions
-Total quantity sold
-Total sales value
-Average unit price
-Minimum unit price
-Maximum unit price
-Average discount percentage
-Display only salesperson-category combinations where the total sales value is greater than 200000.
-
-Arrange the final report from highest total sales value to lowest.
-
-Additional CRUD Challenge
-CRUD Operations
-Create
-
-Insert the new transaction provided in Task 19.
-
-Read
-
-Retrieve and analyze the transaction using filtering and aggregation.
-
-Update
-
-Choose the transaction with transaction_id = 1031 and update its discount percentage from 10 to 12.
-
-Delete
-
-Delete the transaction with transaction_id = 1031.
-
-Then verify that the transaction has been removed.
+SELECT CATEGORY,
+COUNT(TRANSACTION_ID) AS NUMBER_OF_TRANSACTIONS,
+SUM(QUANTITY) AS TOTAL_QUANTITY_SOLD,
+SUM(QUANTITY*UNIT_PRICE) AS TOTAL_SALES_VALUE,
+AVG(UNIT_PRICE) AS AVG_UNIT_PRICE
+FROM SALES_TRANSACTIONS
+GROUP BY CATEGORY
+HAVING SUM(UNIT_PRICE*QUANTITY) > 200000
+;
