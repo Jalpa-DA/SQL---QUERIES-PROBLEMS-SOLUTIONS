@@ -1,0 +1,28 @@
+CREATE JAPZZ-INDUSTRIES;
+
+use  JAPZZ_INDUSTRIES;
+
+select * from customers;
+
+
+select country , age, 
+AVG(amount_spend) as Avg_Amount_Spend
+from customers
+group by country
+having AVG(amount_spend) > 10000;
+
+insert into customers values
+(11, 'Riya', 22,null, null),
+(12, 'Heena', 23,null, null);
+
+update customers
+set country = 'India',
+	amount_spend = 0
+where country is null 
+and amount_spend is null;
+
+delete customers
+where id = 11;
+
+select * from customers
+where id > 10;
