@@ -1,0 +1,318 @@
+
+----continue-----
+
+------Task 21-30---------
+
+---Task 21 — Unsold Product Inventory---
+
+/*
+
+The Inventory team wants to identify products that have never appeared in a transaction.
+
+Display:
+
+Product ID
+Product Name
+Category
+Price
+Sort by price from highest to lowest.
+
+*/
+
+SELECT
+P.Product_ID,
+P.Product_Name,
+P.Category,
+P.Price,
+SUM(O.AMOUNT) AS TRANSACTION_VALUE
+FROM PRODUCTS AS P
+LEFT JOIN ALL_ORDERS AS O
+ON P.PRODUCT_NAME = O.PRODUCT_NAME
+WHERE O.ORDER_ID IS NULL
+GROUP BY P.Product_ID,
+P.Product_Name,
+P.Category,
+P.Price
+ORDER BY PRICE DESC
+;
+
+----Cross Join — Enterprise Scenario---
+
+---Task 22 — Product-Customer Campaign Universe---
+
+/*
+
+
+The Marketing Analytics team is preparing a personalized campaign.
+
+Create a dataset representing every possible customer-product combination.
+
+Display:
+
+Customer ID
+Customer Name
+City
+Product ID
+Product Name
+Category
+
+*/
+
+
+SELECT C.Customer_ID,C.Customer_Name,C.City, P.Product_ID, P.Product_Name,P.CATEGORY
+FROM ALL_CUSTOMERS AS C
+CROSS JOIN PRODUCTS AS P
+;
+
+---Task 23 — Campaign Population Size---
+
+/*
+
+The Marketing department wants to know the theoretical size of a campaign where every customer could receive an offer for every product.
+
+Calculate the total number of possible:
+
+Customer × Product combinations
+
+Return the result as a single value.
+*/
+
+SELECT C.Customer_ID,C.Customer_Name,C.City, P.Product_ID, P.Product_Name,P.CATEGORY
+FROM PRODUCTS AS P
+CROSS JOIN ALL_CUSTOMERS AS C
+;
+
+SELECT 
+COUNT(*) AS TOTAL_COMBINATIONS
+FROM PRODUCTS AS P
+CROSS JOIN ALL_CUSTOMERS AS C
+;
+
+
+---Task 24 — Geographic Product Opportunity---
+
+/*
+
+Create every possible combination of:
+
+Customer City
+Product Name
+Display the complete opportunity matrix.
+
+The result should contain every possible city-product combination, regardless of whether a customer from that city has purchased the product.
+
+*/
+
+SELECT C.CITY, O.PRODUCT_NAME
+FROM ALL_CUSTOMERS AS C
+CROSS JOIN ALL_ORDERS AS O
+;
+
+
+
+---High-Level Business Analysis---
+--Task 25 — Customer Sales Leaderboard Dataset--
+/*
+Management wants a customer performance dataset for the monthly business review.
+
+Generate:
+
+Customer ID
+Customer Name
+City
+Number of Orders
+Total Quantity Purchased
+Total Revenue
+Average Order Value
+Maximum Order Value
+Only customers with at least 3 orders should be included.
+
+Sort the output by:
+
+Total Revenue
+Number of Orders
+Average Order Value
+All in descending order.
+
+*/
+
+select C.Customer_ID, C.Customer_Name, C.City,
+count(order_id) as Number_of_Orders,
+sum(quantity) as Total_Quantity_Purchased,
+sum(amount) as Total_Revenue,
+avg(amount) as Average_Order_Value,
+max(amount) as Maximum_Order_Value
+from all_customers as c
+left join all_orders as O
+on c.customer_id = o.customer_id
+group by c.customer_id, C.customer_name, c.City
+having count(order_id) = > 3
+order by Total_Revenue, Number_of_Orders, Average_Order_Value desc
+;
+
+--Task 26 — Product Business Review--
+/*
+The Product Management team is conducting a quarterly product review.
+
+Generate:
+
+Product Name
+Number of Orders
+Total Quantity Sold
+Total Revenue
+Average Order Value
+Maximum Order Value
+Only products with at least 5 orders and total revenue above ₹2,00,000 should be included.
+
+*/
+
+SELECT P.PRODUCT_NAME,
+COUNT(ORDER_ID) AS NUMBER_OF_ORDERS,
+SUM(QUANTITY) AS TOTAL_QUANTITY_SOLD,
+SUM(AMOUNT) AS TOTAL_REVENUE,
+AVG(AMOUNT) AS AVG_ORDER_VALUE,
+MAX(AMOUNT) AS MAX_ORDER_VALUE
+FROM ALL_ORDERS AS O
+LEFT JOIN PRODUCTS AS P 
+ON O.PRODUCT_NAME = P.PRODUCT_NAME
+GROUP BY O.PRODUCT_NAME
+HAVING COUNT(ORDER_ID) >= 5 AND TOTAL_REVENUE > 200000
+;
+
+--Task 27 — Market Performance Report--
+/*
+
+The Sales Strategy team wants to identify markets with strong customer engagement and revenue generation.
+
+Generate a city-level report containing:
+
+City
+Number of Customers
+Number of Orders
+Total Quantity Sold
+Total Revenue
+Average Order Value
+Only cities satisfying all of the following should appear:
+
+At least 5 customers
+More than 10 orders
+Revenue greater than ₹5,00,000
+
+*/
+
+
+SELECT C.CITY,
+COUNT(C.CUSTOMER_ID) AS NUMBER_OF_CUSTOMERS,
+COUNT(O.ORDER_ID) AS NUMBER_OF_ORDERS,
+SUM(QUANTITY) AS TOTAL_QUANTITY_SOLD,
+SUM(AMOUNT) AS TOTAL_REVENUE,
+AVG(AMOUNT) AS AVG_ORDER_VALUE
+FROM ALL_CUSTOMERS AS C
+LEFT JOIN ALL_ORDERS AS O
+ON C.CUSTOMER_ID = O.CUSTOMER_ID
+GROUP BY C.CITY
+HAVING (COUNT(CUSTOMER_ID) > 5 AND COUNT(ORDER_ID) > 10) 
+--OR (SUM(TOTAL_REVENUE) > 500000)
+;
+
+--Task 28 — High-Value Transaction Analysis---
+
+/*
+The Finance team wants to investigate customers responsible for high-value business.
+
+Identify customers whose transaction history contains at least 2 orders with transaction value greater than ₹25,000.
+
+Display:
+
+Customer ID
+Customer Name
+City
+Number of qualifying orders
+Total value of qualifying orders
+
+
+*/
+
+
+SELECT C.CUSTOMER_ID, C.CUSTOMER_NAME, C.CITY
+COUNT(ORDER_ID) AS NUMBER_OF_QUALIFYING_ORDERS,
+SUM(AMOUNT) AS TOTAL_VALUE_OF_QUALIFYING_ORDERS
+FROM ALL_CUSTOMERS AS C
+INNER JOIN ALL_ORDERS AS O
+ON C.CUSTOMER_ID = O.CUSTOMER_ID
+GROUP BY C.CUSTOMER_ID, C.CUSTOMER_NAME, C.CITY 
+HAVING COUNT(ORDER_ID) = > 2 AND SUM(AMOUNT) > 25000
+--ORDER BY TOTAL_VALUE_OF_QUALIFYING_ORDERS DESC
+--ORDER BY NUMBER_OF_QUALIFYING_ORDERS
+;
+
+
+--Task 29 — Product Demand Analysis--
+/*
+The Supply Chain team wants to identify products with strong customer demand.
+
+Find products where:
+
+Total quantity sold is greater than 100
+At least 5 separate orders exist
+Total revenue exceeds ₹1,00,000
+Display:
+
+Product Name
+Number of Orders
+Total Quantity Sold
+Total Revenue
+Average Order Value
+
+*/
+
+SELECT P.PRODUCT_NAME, 
+COUNT(ORDER_ID) AS NUMBER_OF_ORDERS,
+SUM(QUANTITY) AS TOTAL_QUANTITY_SOLD,
+SUM(AMOUNT) AS TOTAL_REVENUE,
+AVG(AMOUNT) AS AVG_ORDER_VALUE
+FROM ALL_ORDERS AS O
+LEFT JOIN PRODUCTS AS P
+ON O.PRODUCT_NAME = P.PRODUCT_NAME
+GROUP BY P.PRODUCT_NAME 
+HAVING SUM(QUANTITY) >100 AND COUNT(ORDER_ID) > = 5 AND SUM(AMOUNT) > 100000
+;
+
+----Task 30 — Executive Sales Performance Report--
+
+/*
+The executive team wants a high-level customer sales report for a management dashboard.
+
+Generate a customer-level dataset containing:
+
+Customer ID
+Customer Name
+City
+Number of Orders
+Total Quantity Purchased
+Total Purchase Value
+Average Order Value
+Minimum Order Value
+Maximum Order Value
+Only customers meeting both conditions should be included:
+
+At least 3 orders
+Total purchase value greater than ₹1,00,000
+Sort the final report by Total Purchase Value descending.
+
+*/
+
+SELECT C.CUSTOMER_ID, C.CUSTOMER_NAME, C.CITY, 
+COUNT(ORDER_ID) AS TOTAL_ORDERS,
+SUM(QUANTITY) AS TOTAL_QUANTITY,
+SUM(AMOUNT) AS TOTAL_PURCHASE_VALUE,
+AVG(AMOUNT) AS AVG_ORDER_VALUE,
+MIN(AMOUNT) AS MIN_ORDER_VALUE,
+MAX(AMOUNT) AS MAX_ORDER_VALUE
+FROM ALL_CUSTOMERS AS C
+LEFT JOIN ALL_ORDERS AS O
+ON C.CUSTOMER_ID = O.CUSTOMER_ID
+GROUP BY C.CUSTOMER_ID, C.CUSTOMER_NAME, C.CITY
+HAVING COUNT(ORDER_ID) > = 3 AND SUM(AMOUNT) > 100000
+ORDER BY TOTAL_PURCHASE_VALUE DESC
+;
